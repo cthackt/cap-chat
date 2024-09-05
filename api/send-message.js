@@ -1,6 +1,13 @@
-import Pusher from "pusher";
+const express = require('express');
+const Pusher = require('pusher');
 
-// Initialize Pusher
+// Load environment variables from .env file
+require('dotenv').config();
+
+const app = express();
+app.use(express.json());
+
+// Initialize Pusher with environment variables
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
   key: process.env.PUSHER_KEY,
@@ -9,14 +16,17 @@ const pusher = new Pusher({
   useTLS: true
 });
 
-export default async function handler(req, res) {
-  const { message, username } = req.body;
+app.post('/api/send-message', (req, res) => {
+  const { username, message } = req.body;
 
-  // Trigger the message on a Pusher channel
-  await pusher.trigger("chat", "message", {
+  // Trigger a Pusher event
+  pusher.trigger('chat', 'message', {
     username,
     message
   });
 
-  res.status(200).json({ status: "Message sent" });
-}
+  res.status(200).json({ status: 'Message sent' });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

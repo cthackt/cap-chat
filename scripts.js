@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
    });
 
    // Initialize Pusher
-   const pusher = new Pusher('YOUR_PUSHER_KEY', {
-      cluster: 'YOUR_PUSHER_CLUSTER'
-   });
+   const pusher = new Pusher(process.env.key, {
+      cluster: process.env.cluster
+   })
 
    const channel = pusher.subscribe('chat');
 
