@@ -1,3 +1,8 @@
+import { displayMessage, postMessage } from "./message.js";
+import { getChatHistory, addHistoryToFeed } from "./chat-history.js";
+import { scrollToBottom } from "./helper.js";
+import { saveMessageToLocalStorage } from "./chat-history.js";
+
 document.addEventListener('DOMContentLoaded', () => {
    const output = document.getElementById('output');
    const messageInput = document.getElementById('message');
@@ -18,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('username', username);
    });
 
+   //const chatHistory = getChatHistory();
+   addHistoryToFeed(getChatHistory())
+   scrollToBottom();
+
    // Initialize Pusher
    const pusher = new Pusher("5d0b943d3a3560d3e98f", {
       cluster: "us3"
@@ -26,23 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
    const channel = pusher.subscribe('chat');
 
    channel.bind('message', function (data) {
-      console.log('Message received:', data); // Add this line
-      output.innerHTML += `<p><strong>${data.username}: </strong>${data.message}</p>`;
+      displayMessage(data);
+      saveMessageToLocalStorage(data);
    });
 
-   sendButton.addEventListener('click', () => {
-      const message = messageInput.value;
-      const username = usernameInput.value;
-
-      if (message.trim()) {
-         fetch('/api/send-message', {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, message })
-         });
-         messageInput.value = '';
+   sendButton.addEventListener('click', postMessage);
+   messageInput.addEventListener('keypress', (e) => {
+      if (e.key === "Enter") {
+         e.preventDefault(); // Prevent the default action (e.g., form submission)
+         postMessage();
       }
-   });
+   })
 });

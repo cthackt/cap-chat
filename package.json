@@ -1,20 +1,27 @@
 {
-   "name": "chat-app",
-   "version": "1.0.0",
-   "description": "A simple chat app using Pusher and Express",
-   "main": "index.js",
-   "scripts": {
-     "start": "node server.js"
-   },
-   "dependencies": {
-     "express": "^4.17.3",
-     "pusher": "^5.0.3",
-     "dotenv": "^10.0.0"
-   },
-   "engines": {
-     "node": "20.x"
-   },
-   "author": "Your Name",
-   "license": "MIT"
- }
- 
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "A simple chat app using Pusher and Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "pusher": "^5.0.3",
+    "dotenv": "^10.0.0"
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cthackt/cap-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cthackt/cap-chat/issues"
+  },
+  "homepage": "https://github.com/cthackt/cap-chat#readme"
+}

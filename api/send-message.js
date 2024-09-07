@@ -12,19 +12,27 @@ const pusher = new Pusher({
 
 module.exports = async (req, res) => {
    if (req.method === 'POST') {
-      const { username, message } = req.body;
-
-      console.log(`Sending message: ${message} from ${username}`);
+      const { username, message, hashtags, timestamp } = req.body;
 
       try {
          // Trigger a Pusher event
          await pusher.trigger('chat', 'message', {
             username,
-            message
+            message,
+            hashtags,
+            timestamp
          });
 
          console.log('Event triggered successfully');
-         res.status(200).json({ status: 'Message sent' });
+         res.status(200).json({
+            status: 'Message sent',
+            data: {
+               username,
+               message,
+               hashtags,
+               timestamp
+            }
+         });
       } catch (error) {
          console.error('Error triggering event:', error);
          res.status(500).json({ status: 'Error sending message' });
