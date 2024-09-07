@@ -1,32 +1,35 @@
-const express = require('express');
 const Pusher = require('pusher');
-
-// Load environment variables from .env file
 require('dotenv').config();
-
-const app = express();
-app.use(express.json());
 
 // Initialize Pusher with environment variables
 const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID,
-  key: process.env.PUSHER_KEY,
-  secret: process.env.PUSHER_SECRET,
-  cluster: process.env.PUSHER_CLUSTER,
-  useTLS: true
+   appId: process.env.PUSHER_APP_ID,
+   key: process.env.PUSHER_KEY,
+   secret: process.env.PUSHER_SECRET,
+   cluster: process.env.PUSHER_CLUSTER,
+   useTLS: true
 });
 
-app.post('/api/send-message', (req, res) => {
-  const { username, message } = req.body;
+module.exports = async (req, res) => {
+   if (req.method === 'POST') {
+      const { username, message } = req.body;
 
-  // Trigger a Pusher event
-  pusher.trigger('chat', 'message', {
-    username,
-    message
-  });
+      console.log(`Sending message: ${message} from ${username}`);
 
-  res.status(200).json({ status: 'Message sent' });
-});
+      try {
+         // Trigger a Pusher event
+         await pusher.trigger('chat', 'message', {
+            username,
+            message
+         });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+         console.log('Event triggered successfully');
+         res.status(200).json({ status: 'Message sent' });
+      } catch (error) {
+         console.error('Error triggering event:', error);
+         res.status(500).json({ status: 'Error sending message' });
+      }
+   } else {
+      res.status(405).json({ status: 'Only POST requests are allowed' });
+   }
+};

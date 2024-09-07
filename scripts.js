@@ -19,13 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
    });
 
    // Initialize Pusher
-   const pusher = new Pusher(process.env.key, {
-      cluster: process.env.cluster
+   const pusher = new Pusher("5d0b943d3a3560d3e98f", {
+      cluster: "us3"
    })
 
    const channel = pusher.subscribe('chat');
 
    channel.bind('message', function (data) {
+      console.log('Message received:', data); // Add this line
       output.innerHTML += `<p><strong>${data.username}: </strong>${data.message}</p>`;
    });
 
